@@ -89,7 +89,7 @@ namespace ef_core_5.Data
         public int PersonId { get; set; }
         public string FirstName { get; set; }
         public string LastName { get; set; }
-        public DateTime DateOfBirth { get; set; }
+        public DateTime? DateOfBirth { get; set; }
     }
 
     public class Student
