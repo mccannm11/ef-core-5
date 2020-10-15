@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using Microsoft.EntityFrameworkCore;
@@ -20,14 +21,14 @@ namespace ef_core_5.Data
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
-            modelBuilder.Entity<CourseSectionEnrollment>().HasKey(e => new {e.CourseId, e.StudentId });
+            modelBuilder.Entity<CourseSectionEnrollment>().HasKey(e => new {e.CourseId, e.StudentId});
         }
 
         public void SetupDevelopmentDatabase()
         {
             Database.EnsureDeleted();
             Database.EnsureCreated();
-         
+
             var teacher = new Teacher()
             {
                 Person = new Person()
@@ -54,13 +55,13 @@ namespace ef_core_5.Data
             {
                 Name = "History"
             };
-            
+
             Add(teacher);
             Add(student);
             AddRange(science, history);
 
             SaveChanges();
-            
+
             var historySection = new CourseSection()
             {
                 CourseId = history.CourseId,
@@ -75,7 +76,6 @@ namespace ef_core_5.Data
             };
 
             SaveChanges();
-
         }
     }
 
@@ -89,6 +89,7 @@ namespace ef_core_5.Data
         public int PersonId { get; set; }
         public string FirstName { get; set; }
         public string LastName { get; set; }
+        public DateTime DateOfBirth { get; set; }
     }
 
     public class Student
@@ -125,7 +126,7 @@ namespace ef_core_5.Data
         public int TeacherId { get; set; }
         public int CourseId { get; set; }
         public Course Course { get; set; }
-        
+
         public ICollection<Student> Students { get; set; }
     }
 
