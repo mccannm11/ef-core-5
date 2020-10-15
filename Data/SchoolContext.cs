@@ -1,4 +1,5 @@
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using Microsoft.EntityFrameworkCore;
 
 namespace ef_core_5.Data
@@ -21,19 +22,73 @@ namespace ef_core_5.Data
         {
             modelBuilder.Entity<CourseSectionEnrollment>().HasKey(e => new {e.CourseId, e.StudentId });
         }
+
+        public void SetupDevelopmentDatabase()
+        {
+            Database.EnsureDeleted();
+            Database.EnsureCreated();
+         
+            var teacher = new Teacher()
+            {
+                Person = new Person()
+                {
+                    FirstName = "Sally",
+                    LastName = "Simpson"
+                }
+            };
+
+            var student = new Student()
+            {
+                Person = new Person()
+                {
+                    FirstName = "Timmy",
+                    LastName = "Timmons"
+                }
+            };
+
+            var science = new Course()
+            {
+                Name = "Science"
+            };
+            var history = new Course()
+            {
+                Name = "History"
+            };
+            
+            Add(teacher);
+            Add(student);
+            AddRange(science, history);
+
+            SaveChanges();
+            
+            var historySection = new CourseSection()
+            {
+                CourseId = history.CourseId,
+                TeacherId = teacher.TeacherId
+            };
+
+            Add(historySection);
+
+            student.CourseSections = new Collection<CourseSection>()
+            {
+                historySection
+            };
+
+            SaveChanges();
+
+        }
     }
 
     public class StudentAssignment
     {
         public int StudentAssignmentId { get; set; }
-    
     }
 
     public class Person
     {
         public int PersonId { get; set; }
-        public int FirstName { get; set; }
-        public int LastName { get; set; }
+        public string FirstName { get; set; }
+        public string LastName { get; set; }
     }
 
     public class Student
@@ -42,7 +97,6 @@ namespace ef_core_5.Data
         public int PersonId { get; set; }
         public Person Person { get; set; }
         public ICollection<CourseSection> CourseSections { get; set; }
-        
     }
 
     public class Teacher
@@ -70,6 +124,9 @@ namespace ef_core_5.Data
         public int CourseSectionId { get; set; }
         public int TeacherId { get; set; }
         public int CourseId { get; set; }
+        public Course Course { get; set; }
+        
+        public ICollection<Student> Students { get; set; }
     }
 
     public class Course
