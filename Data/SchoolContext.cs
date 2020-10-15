@@ -1,4 +1,3 @@
-using System;
 using System.Collections.Generic;
 using Microsoft.EntityFrameworkCore;
 
@@ -17,6 +16,11 @@ namespace ef_core_5.Data
 
         protected override void OnConfiguring(DbContextOptionsBuilder options)
             => options.UseSqlite("Data Source=school.db");
+
+        protected override void OnModelCreating(ModelBuilder modelBuilder)
+        {
+            modelBuilder.Entity<CourseSectionEnrollment>().HasKey(e => new {e.CourseId, e.StudentId });
+        }
     }
 
     public class StudentAssignment
@@ -28,12 +32,14 @@ namespace ef_core_5.Data
     public class Person
     {
         public int PersonId { get; set; }
+        public int FirstName { get; set; }
+        public int LastName { get; set; }
     }
 
     public class Student
     {
-        public int PersonId { get; set; }
         public int StudentId { get; set; }
+        public int PersonId { get; set; }
         public Person Person { get; set; }
         public ICollection<CourseSection> CourseSections { get; set; }
         
@@ -57,7 +63,6 @@ namespace ef_core_5.Data
     {
         public int CourseId { get; set; }
         public int StudentId { get; set; }
-        public int AssignmentId { get; set; }
     }
 
     public class CourseSection
