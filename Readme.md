@@ -19,10 +19,3 @@
 ### Todo
 * Sketch out a dummy domain with a many to many
 
-
-Student
-Course
-CourseSection
-StudentCourseSectionEnrollment
-Assignment
-Teacher
