@@ -21,7 +21,7 @@ namespace ef_core_5.Data
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
-            modelBuilder.Entity<CourseSectionEnrollment>().HasKey(e => new {e.CourseId, e.StudentId});
+            modelBuilder.Entity<CourseSectionEnrollment>().HasKey(e => new {e.CourseSectionId, e.StudentId});
         }
 
         public void SetupDevelopmentDatabase()
@@ -116,7 +116,7 @@ namespace ef_core_5.Data
 
     public class CourseSectionEnrollment
     {
-        public int CourseId { get; set; }
+        public int CourseSectionId { get; set; }
         public int StudentId { get; set; }
     }
 
