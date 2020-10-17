@@ -4,6 +4,7 @@ using System.Reflection;
 using ef_core_5.Data;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
@@ -21,7 +22,7 @@ namespace ef_core_5
 
         public void ConfigureServices(IServiceCollection services)
         {
-            services.AddDbContext<SchoolContext>();
+            services.AddDbContext<SchoolContext>(options => options.UseSqlite("Data Source=school.db"));
             services.AddControllers();
             services.AddSchoolServices();
         }
@@ -37,8 +38,7 @@ namespace ef_core_5
             {
                 app.UseHttpsRedirection();
             }
-
-
+            
             app.UseRouting();
             app.UseAuthorization();
 
@@ -55,7 +55,7 @@ namespace ef_core_5
         public static IServiceCollection AddSchoolServices(this IServiceCollection services)
         {
             const string servicesNamespace = "ef_core_5.Services";
-            
+
             var scannedServices = Assembly
                 .GetAssembly(typeof(Startup))
                 .GetTypes()
@@ -65,14 +65,14 @@ namespace ef_core_5
                 .Where(t => t.Name.EndsWith("Service"));
 
             Console.WriteLine($"Found {scannedServices.Count()} services");
-            
+
             foreach (var service in scannedServices)
             {
                 var interfaceType = service.GetInterfaces().First();
                 services.AddTransient(interfaceType, service);
                 Console.WriteLine($"Adding service: {interfaceType.Name} - {service.Name}");
             }
- 
+
             return services;
         }
     }

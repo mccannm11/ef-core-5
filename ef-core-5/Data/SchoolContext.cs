@@ -7,6 +7,10 @@ namespace ef_core_5.Data
 {
     public class SchoolContext : DbContext
     {
+        public SchoolContext(DbContextOptions<SchoolContext> options) : base(options)
+        {
+        }
+
         public DbSet<Course> Courses { get; set; }
         public DbSet<CourseSection> CourseSections { get; set; }
         public DbSet<CourseSectionEnrollment> CourseSectionEnrollments { get; set; }
@@ -15,9 +19,6 @@ namespace ef_core_5.Data
         public DbSet<Teacher> Teachers { get; set; }
         public DbSet<Student> Students { get; set; }
         public DbSet<Person> Persons { get; set; }
-
-        protected override void OnConfiguring(DbContextOptionsBuilder options)
-            => options.UseSqlite("Data Source=school.db");
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
@@ -126,8 +127,6 @@ namespace ef_core_5.Data
         public int TeacherId { get; set; }
         public int CourseId { get; set; }
         public Course Course { get; set; }
-
-        public ICollection<Student> Students { get; set; }
     }
 
     public class Course
