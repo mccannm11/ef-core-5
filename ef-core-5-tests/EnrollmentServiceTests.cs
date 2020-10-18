@@ -18,10 +18,13 @@ namespace ef_core_5_tests
         {
             var fixture = new Fixture()
                 .Customize(new AutoMoqCustomization());
-
+            
             fixture.Register(ContextFactory.GetSchoolContext);
+            // fixture.Customize(new StudentCustomization());
+            fixture.Customize<Student>(
+                c => c.Without(s => s.PersonId));
 
-            fixture.Customize<Student>(b => b.Without(s => s.PersonId));
+            fixture.Customize<Person>(c => c.Without(p => p.PersonId));
 
             return fixture;
         };
@@ -31,6 +34,7 @@ namespace ef_core_5_tests
         {
         }
     }
+
 
     public static class ContextFactory
     {
@@ -74,6 +78,7 @@ namespace ef_core_5_tests
             Student student,
             SchoolContext schoolContext)
         {
+            student.Person = null;
             schoolContext.Add(student);
             await schoolContext.SaveChangesAsync();
 
